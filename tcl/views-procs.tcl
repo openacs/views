@@ -42,3 +42,18 @@ ad_proc -public views::get {
 
     return {views {} unique_views {} last_viewed {}}
 }
+
+ad_proc -public views::viewed_p { 
+    -object_id
+    {-user_id 0}
+} {
+    if {!$user_id} {
+        set user_id [ad_conn user_id]
+    }
+    return [db_string get_viewed_p {
+        select count(*)
+        from views
+        where object_id = :object_id
+              and viewer_id = :user_id
+    } -default 0]
+}
