@@ -16,17 +16,17 @@ create or replace function views__record_view (integer, integer) returns integer
 declare
     p_object_id alias for $1;
     p_viewer_id alias for $2;
-    v_views    views.views%TYPE;
+    v_views    views_views.views_count%TYPE;
 begin 
-    select views into v_views from views where object_id = p_object_id and viewer_id = p_viewer_id;
+    select views_count into v_views from views_views where object_id = p_object_id and viewer_id = p_viewer_id;
 
     if v_views is null then 
-        INSERT into views(object_id,viewer_id) 
+        INSERT into views_views(object_id,viewer_id) 
         VALUES (p_object_id, p_viewer_id);
         v_views := 0;
     else
-        UPDATE views
-           SET views = views + 1, last_viewed = now()
+        UPDATE views_views
+           SET views_count = views_count + 1, last_viewed = now()
          WHERE object_id = p_object_id
            and viewer_id = p_viewer_id;
     end if;
