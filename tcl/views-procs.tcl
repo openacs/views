@@ -3,8 +3,8 @@ ad_library {
     TCL library for recoding views
 
     @author Jeff Davis <davis@xarg.net>
-
     @creation-date 2004-05-20
+	
     @cvs-id $Id$
 }
 
@@ -24,7 +24,7 @@ ad_proc -public views::record_view {
     @author Jeff Davis davis@xarg.net
     @creation-date 2004-01-30
 } {
-    set views [db_string record_view "select views__record_view(:object_id, :viewer_id)" -default 1]
+    set views [db_string record_view {} -default 1]
 
     return $views
 }
@@ -32,11 +32,7 @@ ad_proc -public views::record_view {
 ad_proc -public views::get { 
     -object_id
 } {
-    if {[db_0or1row views {
-        SELECT views, unique_views, to_char(last_viewed,'YYYY-MM-DD HH24:MI:SS') as last_viewed
-        FROM view_aggregates
-        WHERE object_id = :object_id
-    } -column_array ret] } {
+    if {[db_0or1row views {} -column_array ret] } {
         return [array get ret]
     }
 
@@ -50,10 +46,5 @@ ad_proc -public views::viewed_p {
     if {!$user_id} {
         set user_id [ad_conn user_id]
     }
-    return [db_string get_viewed_p {
-        select count(*)
-        from views
-        where object_id = :object_id
-              and viewer_id = :user_id
-    } -default 0]
+    return [db_string get_viewed_p {} -default 0]
 }
