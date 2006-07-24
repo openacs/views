@@ -24,7 +24,7 @@ ad_proc -public views::record_view {
     @author Jeff Davis davis@xarg.net
     @creation-date 2004-01-30
 } {
-    set views [db_string record_view {} -default 1]
+    set views [db_exec_plsql record_view {}]
 
     return $views
 }
