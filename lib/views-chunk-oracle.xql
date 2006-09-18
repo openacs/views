@@ -2,7 +2,7 @@
 <queryset>
 <rdbms><type>oracle</type><version>8.1.6</version></rdbms>
 
-<fullquery name="">      
+<fullquery name="select_views">      
 	<querytext>
 	select t.* from
     	(
