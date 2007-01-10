@@ -32,6 +32,16 @@ ad_proc -public views::record_view {
 ad_proc -public views::get { 
     -object_id
 } {
+
+    Return an array (which you have to set with "array set your_array [views::get -object_id $object_id]") with the elements:
+    <ul>
+    <li>views
+    <li>unique_views
+    <li>last_viewed
+    </ul>
+    
+    @param object_id ID of the object for which you want to return the views
+} {
     if {[db_0or1row views {
         SELECT views, unique_views, to_char(last_viewed,'YYYY-MM-DD HH24:MI:SS') as last_viewed
         FROM view_aggregates
