@@ -24,8 +24,9 @@ ad_proc -public views::record_view {
     @author Jeff Davis davis@xarg.net
     @creation-date 2004-01-30
 } {
-    set views [db_string record_view "select views__record_view(:object_id, :viewer_id)" -default 1]
-
+    if {[catch {db_string record_view "select views__record_view(:object_id, :viewer_id)" -default 1} views]} {
+	set views 0
+    }
     return $views
 }
 
