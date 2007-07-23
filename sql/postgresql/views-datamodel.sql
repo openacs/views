@@ -53,11 +53,46 @@ comment on table view_aggregates is '
         trigger maintained by updates on views.
 ';
 
+create table views_by_type (
+        object_id       integer
+                        constraint views_by_type_object_id_fk
+                        references acs_objects(object_id) on delete cascade
+                        constraint views_by_type_object_id_nn
+                        not null,
+        viewer_id       integer
+                        constraint views_by_type_owner_id_fk
+                        references parties(party_id) on delete cascade
+                        constraint views_by_type_viewer_id_nn
+                        not null,
+        type            varchar(100) not null,
+        views           integer default 1,
+        last_viewed     timestamptz default now(),
+        constraint views_by_type_pk 
+        primary key (object_id, viewer_id, type)
+);
 
+create unique index views_by_type_viewer_idx on views_by_type(viewer_id, object_id, type);
 
+comment on table views_by_type is '
+        a simple count of how many times an object is viewed for each type.
+';
 
+create table view_aggregates_by_type (
+        object_id       integer
+                        constraint view_aggregates_by_type_object_id_fk
+                        references acs_objects(object_id) on delete cascade
+                        constraint view_aggregates_by_type_object_id_nn
+                        not null,
+        type            varchar(100) not null,
+        views           integer default 1,
+        unique_views    integer default 1,
+        last_viewed     timestamptz default now(),
+        constraint view_aggregates_by_type_pk
+        primary key (object_id, type)
+);
 
-
-
-
+comment on table view_aggregates_by_type is '
+        a simple count of how many times an object is viewed for each type,
+        multiple visits trigger maintained by updates on views_by_type.
+';
 
