@@ -12,7 +12,7 @@
 -- License.  Full text of the license is available from the GNU Project:
 -- http://www.fsf.org/copyleft/gpl.html
 
-create table views (
+create table views_views (
         object_id       integer
                         constraint views_object_id_fk
                         references acs_objects(object_id) on delete cascade
@@ -23,15 +23,15 @@ create table views (
                         references parties(party_id) on delete cascade
                         constraint views_viewer_id_nn
                         not null,
-        views           integer default 1,
+        views_count     integer default 1,
         last_viewed     timestamptz default now(),
-        constraint views_pk 
+        constraint views_views_pk 
         primary key (object_id, viewer_id)
 );
 
-create unique index views_viewer_idx on views(viewer_id, object_id);
+create unique index views_views_viewer_idx on views_views(viewer_id, object_id);
 
-comment on table views is '
+comment on table views_views is '
         a simple count of how many times an object is viewed.
 ';
 
@@ -43,7 +43,7 @@ create table view_aggregates (
                         not null 
                         constraint view_aggregatess_pk 
                         primary key,
-        views           integer default 1,
+        views_count     integer default 1,
         unique_views    integer default 1,
         last_viewed     timestamptz default now()
 );
@@ -64,14 +64,14 @@ create table views_by_type (
                         references parties(party_id) on delete cascade
                         constraint views_by_type_viewer_id_nn
                         not null,
-        type            varchar(100) not null,
-        views           integer default 1,
+        view_type       varchar(100) not null,
+        views_count     integer default 1,
         last_viewed     timestamptz default now(),
         constraint views_by_type_pk 
-        primary key (object_id, viewer_id, type)
+        primary key (object_id, viewer_id, view_type)
 );
 
-create unique index views_by_type_viewer_idx on views_by_type(viewer_id, object_id, type);
+create unique index views_by_type_viewer_idx on views_by_type(viewer_id, object_id, view_type);
 
 comment on table views_by_type is '
         a simple count of how many times an object is viewed for each type.
@@ -79,16 +79,16 @@ comment on table views_by_type is '
 
 create table view_aggregates_by_type (
         object_id       integer
-                        constraint view_aggregates_by_type_object_id_fk
+                        constraint view_agg_b_type_ob_id_fk
                         references acs_objects(object_id) on delete cascade
-                        constraint view_aggregates_by_type_object_id_nn
+                        constraint view_agg_b_type_ob_id_nn
                         not null,
-        type            varchar(100) not null,
-        views           integer default 1,
+        view_type            varchar(100) not null,
+        views_count     integer default 1,
         unique_views    integer default 1,
         last_viewed     timestamptz default now(),
         constraint view_aggregates_by_type_pk
-        primary key (object_id, type)
+        primary key (object_id, view_type)
 );
 
 comment on table view_aggregates_by_type is '

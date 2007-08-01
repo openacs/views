@@ -16,17 +16,17 @@ create or replace function views__record_view (integer, integer) returns integer
 declare
     p_object_id alias for $1;
     p_viewer_id alias for $2;
-    v_views    views.views%TYPE;
+    v_views    views_views.views_count%TYPE;
 begin 
-    select views into v_views from views where object_id = p_object_id and viewer_id = p_viewer_id;
+    select views_count into v_views from views_views where object_id = p_object_id and viewer_id = p_viewer_id;
 
     if v_views is null then 
-        INSERT into views(object_id,viewer_id) 
+        INSERT into views_views(object_id,viewer_id) 
         VALUES (p_object_id, p_viewer_id);
         v_views := 0;
     else
-        UPDATE views
-           SET views = views + 1, last_viewed = now()
+        UPDATE views_views
+           SET views_count = views_count + 1, last_viewed = now()
          WHERE object_id = p_object_id
            and viewer_id = p_viewer_id;
     end if;
@@ -42,21 +42,21 @@ create or replace function views_by_type__record_view (integer, integer, varchar
 declare
     p_object_id alias for $1;
     p_viewer_id alias for $2;
-    p_type      alias for $3;
-    v_views    views.views%TYPE;
+    p_view_type      alias for $3;
+    v_views     views_views.views_count%TYPE;
 begin 
-    select views into v_views from views_by_type where object_id = p_object_id and viewer_id = p_viewer_id and type = p_type;
+    select views_count into v_views from views_by_type where object_id = p_object_id and viewer_id = p_viewer_id and view_type = p_view_type;
 
     if v_views is null then 
-        INSERT into views_by_type(object_id,viewer_id,type) 
-        VALUES (p_object_id, p_viewer_id,p_type);
+        INSERT into views_by_type(object_id,viewer_id,view_type) 
+        VALUES (p_object_id, p_viewer_id,p_view_type);
         v_views := 0;
     else
         UPDATE views_by_type
-           SET views = views + 1, last_viewed = now(), type = p_type
+           SET views_count = views_count + 1, last_viewed = now(), view_type = p_view_type
          WHERE object_id = p_object_id
            and viewer_id = p_viewer_id
-           and type = p_type;
+           and view_type = p_view_type;
     end if;
 
     return v_views + 1;
@@ -64,4 +64,4 @@ end;' language 'plpgsql';
 
 comment on function views_by_type__record_view(integer, integer, varchar) is 'update the view by type count of object_id for viewer viewer_id, returns view count';
 
-select define_function_args('views_by_type__record_view','object_id,viewer_id,type');
+select define_function_args('views_by_type__record_view','object_id,viewer_id,view_type');

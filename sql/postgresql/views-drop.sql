@@ -11,8 +11,11 @@
 -- http://www.fsf.org/copyleft/gpl.html
 
 select drop_package('views');
+drop table view_aggregates_by_type;
+drop table views_by_type;
 drop table view_aggregates;
-drop table views;
-drop function views_upd_tr();
-drop function views_ins_tr();
-
+drop table views_views;
+drop function views_views_upd_tr() cascade;
+drop function views_views_ins_tr() cascade;
+drop function views_by_type_ins_tr() cascade;
+drop function views_by_type_upd_tr() cascade;
