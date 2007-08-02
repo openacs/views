@@ -1,4 +1,4 @@
-# /packages/cop-base/tcl/ratings-procs.tcl
+# /packages/views/tcl/views-procs.tcl
 ad_library {
     TCL library for recoding views
 
@@ -26,15 +26,17 @@ ad_proc -public views::record_view {
     @creation-date 2004-01-30
 } {
     if { $type ne "" } {
-	if { [lsearch [list views unique_views last_viewed] $type] >= 0 } {
+	if { [lsearch [list views_count unique_views last_viewed] $type] >= 0 } {
 	    # if the type is on of the list it will conflict on the views::get procedure
-	    error "views::record_view type cannot be views, unique_views or last_viewed"
+	    error "views::record_view type cannot be views_count, unique_views or last_viewed"
 	}
-	set views_by_type [db_string record_view_by_type "select views_by_type__record_view(:object_id, :viewer_id, :type)" -default 1]
+	#TYPE is PL/SQL reserver word in ORACLE
+	#set view_type $type
+	set views_by_type [db_exec_plsql record_view_by_type {}]
     }
 
-    if {[catch {db_string record_view "select views__record_view(:object_id, :viewer_id)" -default 1} views]} {
-	set views 0
+    if {[catch {set views [db_exec_plsql record_view {}]} views]} {
+		set views 0
     }
     return $views
 }
@@ -45,28 +47,20 @@ ad_proc -public views::get {
 
     Return an array (which you have to set with "array set your_array [views::get -object_id $object_id]") with the elements:
     <ul>
-    <li>views
+    <li>views_count
     <li>unique_views
     <li>last_viewed
     </ul>
     
     @param object_id ID of the object for which you want to return the views
 } {
-    if {[db_0or1row views {
-        SELECT views, unique_views, to_char(last_viewed,'YYYY-MM-DD HH24:MI:SS') as last_viewed
-        FROM view_aggregates
-        WHERE object_id = :object_id
-    } -column_array ret] } {
-        db_foreach select_views_by_type {
-	    select type, views
-              from view_aggregates_by_type
-             where object_id = :object_id
-	} {
-	    set ret($type) $views
+    if {[db_0or1row views { } -column_array ret] } {
+        db_foreach select_views_by_type { } {
+	    set ret($view_type) $views_count
 	}
         return [array get ret]
     }
-    return {views {} unique_views {} last_viewed {}}
+    return {views_count {} unique_views {} last_viewed {}}
 }
 
 
@@ -79,20 +73,9 @@ ad_proc -public views::viewed_p {
         set user_id [ad_conn user_id]
     }
     if { $type ne "" } {
-	return [db_string get_viewed_by_type_p {
-	    select count(*)
-	      from views_by_type
-	     where object_id = :object_id
-	       and viewer_id = :user_id
-	       and type = :type
-	} -default 0]
+		return [db_string get_viewed_by_type_p { } -default 0]
     } else {
-	return [db_string get_viewed_p {
-	    select count(*)
-	      from views
-	     where object_id = :object_id
-	       and viewer_id = :user_id
-	} -default 0]
+		return [db_string get_viewed_p { } -default 0]
     }
 
 }
