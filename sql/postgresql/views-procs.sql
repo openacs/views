@@ -12,12 +12,18 @@
 -- License.  Full text of the license is available from the GNU Project:
 -- http://www.fsf.org/copyleft/gpl.html
 
-create or replace function views__record_view (integer, integer) returns integer as '
-declare
-    p_object_id alias for $1;
-    p_viewer_id alias for $2;
+
+
+--
+-- procedure views__record_view/2
+--
+CREATE OR REPLACE FUNCTION views__record_view(
+   p_object_id integer,
+   p_viewer_id integer
+) RETURNS integer AS $$
+DECLARE
     v_views    views_views.views_count%TYPE;
-begin 
+BEGIN 
     select views_count into v_views from views_views where object_id = p_object_id and viewer_id = p_viewer_id;
 
     if v_views is null then 
@@ -32,19 +38,26 @@ begin
     end if;
 
     return v_views + 1;
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 comment on function views__record_view(integer, integer) is 'update the view count of object_id for viewer viewer_id, returns view count';
 
 select define_function_args('views__record_view','object_id,viewer_id');
 
-create or replace function views_by_type__record_view (integer, integer, varchar) returns integer as '
-declare
-    p_object_id alias for $1;
-    p_viewer_id alias for $2;
-    p_view_type      alias for $3;
+
+
+--
+-- procedure views_by_type__record_view/3
+--
+CREATE OR REPLACE FUNCTION views_by_type__record_view(
+   p_object_id integer,
+   p_viewer_id integer,
+   p_view_type varchar
+) RETURNS integer AS $$
+DECLARE
     v_views     views_views.views_count%TYPE;
-begin 
+BEGIN 
     select views_count into v_views from views_by_type where object_id = p_object_id and viewer_id = p_viewer_id and view_type = p_view_type;
 
     if v_views is null then 
@@ -60,7 +73,8 @@ begin
     end if;
 
     return v_views + 1;
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 comment on function views_by_type__record_view(integer, integer, varchar) is 'update the view by type count of object_id for viewer viewer_id, returns view count';
 

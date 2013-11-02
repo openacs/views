@@ -32,7 +32,7 @@ if {!$admin_p} {
     set user_filter_label ""
 } else {
     if {[info exists viewer_id]} {
-        if {![empty_string_p $viewer_id]} {
+        if {$viewer_id ne ""} {
             set user_filter_label [acs_user::get_element -user_id $viewer_id -element name]
         } else {
             set user_filter_label All

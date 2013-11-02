@@ -44,13 +44,19 @@ comment on table view_aggregates_by_type is '
 ';
 
 
-create or replace function views_by_type__record_view (integer, integer, varchar) returns integer as '
-declare
-    p_object_id alias for $1;
-    p_viewer_id alias for $2;
-    p_type      alias for $3;
+
+
+--
+-- procedure views_by_type__record_view/3
+--
+CREATE OR REPLACE FUNCTION views_by_type__record_view(
+   p_object_id integer,
+   p_viewer_id integer,
+   p_type varchar
+) RETURNS integer AS $$
+DECLARE
     v_views    views.views%TYPE;
-begin 
+BEGIN 
     select views into v_views from views_by_type where object_id = p_object_id and viewer_id = p_viewer_id and type = p_type;
 
     if v_views is null then 
@@ -66,14 +72,15 @@ begin
     end if;
 
     return v_views + 1;
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 comment on function views_by_type__record_view(integer, integer, varchar) is 'update the view by type count of object_id for viewer viewer_id, returns view count';
 
 select define_function_args('views_by_type__record_view','object_id,viewer_id,type');
 
-create function views_by_type_ins_tr () returns opaque as '
-begin
+CREATE OR REPLACE FUNCTION views_by_type_ins_tr () RETURNS trigger AS $$
+BEGIN
     if not exists (select 1 from view_aggregates_by_type where object_id = new.object_id and type = new.type) then 
         INSERT INTO view_aggregates_by_type (object_id,type,views,unique_views,last_viewed) 
         VALUES (new.object_id,new.type,1,1,now());
@@ -85,22 +92,24 @@ begin
     end if;
 
     return new;
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 create trigger views_by_type_ins_tr 
 after insert on views_by_type
 for each row
 execute procedure views_by_type_ins_tr();
 
-create function views_by_type_upd_tr () returns opaque as '
-begin
+CREATE OR REPLACE FUNCTION views_by_type_upd_tr () RETURNS trigger AS $$
+BEGIN
     UPDATE view_aggregates_by_type 
        SET views = views + 1, last_viewed = now() 
      WHERE object_id = new.object_id
        AND type = new.type;
 
     return new;
-end;' language 'plpgsql';
+END;
+$$ LANGUAGE plpgsql;
 
 create trigger views_by_type_upd_tr
 after update on views_by_type
