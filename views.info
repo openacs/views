@@ -15,7 +15,7 @@
         <description format="text/html">Records views of objects, tracks summary count per object and can be used for displaying which objects are &quot;new&quot; to a given user.</description>
         <license>GPL</license>
         <license_url>http://www.gnu.org/copyleft/gpl.html</license_url>
-        <maturity>0</maturity>
+        <maturity>2</maturity>
 
         <provides url="views" version="2.8.1a1"/>
 
