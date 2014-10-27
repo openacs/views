@@ -1,6 +1,5 @@
-# /packages/views/tcl/views-procs.tcl
 ad_library {
-    TCL library for recoding views
+    Tcl library for recoding views
 
     @author Jeff Davis <davis@xarg.net>
 
