@@ -101,3 +101,9 @@ view_api_test_with_type \
 			aa_equals "views_count on view_aggregates is equal to sum views_count on views_views" $view_count_aggregates $all_views_count
 		}
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

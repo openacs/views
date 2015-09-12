@@ -120,3 +120,9 @@ db_multirow -extend {fullname object_type_pretty_name viewer_id_filter_link} vie
         set viewer_id_filter_link ""
     }
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:
