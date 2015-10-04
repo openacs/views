@@ -8,17 +8,17 @@
     <singleton-p>t</singleton-p>
     <auto-mount>views</auto-mount>
 
-    <version name="2.9.0b1" url="http://openacs.org/repository/download/apm/views-2.9.0b1.apm">
+    <version name="2.9.0b2" url="http://openacs.org/repository/download/apm/views-2.9.0b2.apm">
         <owner url="mailto:davis@xarg.net">Jeff Davis</owner>
         <summary>Track views of objects.</summary>
-        <release-date>2015-09-25</release-date>
+        <release-date>2015-10-04</release-date>
         <vendor url="http://xarg.net">Xarg</vendor>
         <description format="text/html">Records views of objects, tracks summary count per object and can be used for displaying which objects are &quot;new&quot; to a given user.</description>
         <license>GPL</license>
         <license_url>http://www.gnu.org/copyleft/gpl.html</license_url>
         <maturity>2</maturity>
 
-        <provides url="views" version="2.9.0b1"/>
+        <provides url="views" version="2.9.0b2"/>
 
         <callbacks>
         </callbacks>
