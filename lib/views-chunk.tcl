@@ -35,7 +35,7 @@ if {!$admin_p} {
         if {$viewer_id ne ""} {
             set user_filter_label [acs_user::get_element -user_id $viewer_id -element name]
         } else {
-            set user_filter_label All
+            set user_filter_label "Current User"
             unset viewer_id
         }
     } else {
@@ -85,7 +85,7 @@ set filters_list {
     viewer_id {
         label "Show User"
         where_clause {viewing_user_id = :viewer_id}
-        other_label $user_filter_label
+        values {{All ""} {"$user_filter_label" $user_id}}
         has_default_p 1
     }
     object_id {
@@ -102,6 +102,7 @@ template::list::create \
     -orderby $orderby_list \
     -orderby_name sortby \
     -filters $filters_list
+
     
 set orderby_clause [template::list::orderby_clause -orderby -name views]
 set where_clause [template::list::filter_where_clauses -name views -and]
