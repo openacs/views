@@ -25,7 +25,7 @@ ad_proc -public views::record_view {
     @creation-date 2004-01-30
 } {
     if { $type ne "" } {
-	if { [lsearch [list views_count unique_views last_viewed] $type] >= 0 } {
+	if { $type in {views_count unique_views last_viewed} } {
 	    # if the type is on of the list it will conflict on the views::get procedure
 	    error "views::record_view type cannot be views_count, unique_views or last_viewed"
 	}
@@ -78,3 +78,9 @@ ad_proc -public views::viewed_p {
     }
 
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

@@ -19,7 +19,6 @@
 	         views_views v,
 	         persons p
 	    where o.object_type = :object_type
-			  and o.tree_sortkey between b.tree_sortkey and tree_right(b.tree_sortkey)
 			  and b.object_id = :package_id
 	          and v.object_id = o.object_id
 	          and p.person_id = v.viewer_id
