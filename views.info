@@ -8,7 +8,7 @@
     <singleton-p>t</singleton-p>
     <auto-mount>views</auto-mount>
 
-    <version name="2.9.1" url="http://openacs.org/repository/download/apm/views-2.9.1.apm">
+    <version name="2.10.0d0" url="http://openacs.org/repository/download/apm/views-2.10.0d0.apm">
         <owner url="mailto:davis@xarg.net">Jeff Davis</owner>
         <summary>Track views of objects.</summary>
         <release-date>2017-08-06</release-date>
@@ -18,7 +18,7 @@
         <license_url>http://www.gnu.org/copyleft/gpl.html</license_url>
         <maturity>2</maturity>
 
-        <provides url="views" version="2.9.1"/>
+        <provides url="views" version="2.10.0d0"/>
 
         <callbacks>
         </callbacks>
