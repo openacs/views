@@ -33,7 +33,7 @@ if {!$admin_p} {
 } else {
     if {[info exists viewer_id]} {
         if {$viewer_id ne ""} {
-            set user_filter_label [acs_user::get_element -user_id $viewer_id -element name]
+            set user_filter_label [person::name -user_id $viewer_id]
         } else {
             set user_filter_label "Current User"
             unset viewer_id
