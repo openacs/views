@@ -68,15 +68,22 @@ ad_proc -public views::viewed_p {
     {-user_id 0}
     {-type ""}
 } {
+    Returns whether an object was viewed by specified user.
+
+    @param object_id viewed object id
+    @param user_id viewing user id
+    @param type filter results by type
+
+    @return boolean value
+} {
     if {!$user_id} {
         set user_id [ad_conn user_id]
     }
     if { $type ne "" } {
-		return [db_string get_viewed_by_type_p { } -default 0]
+        return [db_string get_viewed_by_type_p {} -default 0]
     } else {
-		return [db_string get_viewed_p { } -default 0]
+        return [db_string get_viewed_p {} -default 0]
     }
-
 }
 
 # Local variables:
