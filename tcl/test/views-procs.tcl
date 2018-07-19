@@ -18,7 +18,7 @@ aa_register_case \
 				set object_id_list [db_list get_object_id_list "select ao.object_id from acs_objects ao left outer join (select object_id from views_views where viewer_id != :viewer_id) vt on ao.object_id = vt.object_id"]
 				set object_id [lindex [util::randomize_list $object_id_list] 0]
 				
-				aa_false "User view object_id" [expr {[views::viewed_p -object_id $object_id -user_id 0] > 0}]
+				aa_false "User view object_id" {[views::viewed_p -object_id $object_id -user_id 0] > 0}
 				
 				aa_log "User_id is $viewer_id, object is $object_id"
 				
@@ -26,7 +26,7 @@ aa_register_case \
 				
 				set count_record [db_string count_record "select count(*) from  views_views where object_id = :object_id and viewer_id = :viewer_id" -default 0]
 				
-				aa_true "Record add" [expr {$count_record > 0}]
+				aa_true "Record add" {$count_record > 0}
 				
 				set count_views [db_string count_views "select views_count from views_views where object_id = :object_id and viewer_id = :viewer_id" -default 0]
 				
@@ -34,16 +34,16 @@ aa_register_case \
 				#Update count views
 				set count_record [db_string count_record "select count(*) from  views_views where object_id = :object_id and viewer_id = :viewer_id" -default 0]
 				
-				aa_true "Update record but don't insert new row" [expr {$count_record == 1}]
+				aa_true "Update record but don't insert new row" {$count_record == 1}
 				
 				set count_views2 [db_string count_views2 "select views_count from views_views where object_id = :object_id and viewer_id = :viewer_id" -default 0]
 				
-				aa_true "Count_view is updated" [expr {$count_views2 > $count_views}]
+				aa_true "Count_view is updated" {$count_views2 > $count_views}
 				
 				set get [views::get -object_id $object_id]
 				aa_log "Return of function views::get $get"
 				
-				aa_true "User view object_id" [expr {[views::viewed_p -object_id $object_id -user_id $viewer_id] > 0}]
+				aa_true "User view object_id" {[views::viewed_p -object_id $object_id -user_id $viewer_id] > 0}
 				
 				set all_views_count [db_string count_views_views "select sum(views_count) from views_views where object_id = :object_id"]
 				set view_count_aggregates [db_string get_views_count "select views_count from view_aggregates where object_id = :object_id"]
@@ -70,7 +70,7 @@ view_api_test_with_type \
 			
 			set type test
 			
-			aa_false "User has viewed object_id" [expr {[views::viewed_p -object_id $object_id -user_id $viewer_id -type $type] > 0}]
+			aa_false "User has viewed object_id" {[views::viewed_p -object_id $object_id -user_id $viewer_id -type $type] > 0}
 			
 			aa_log "User_id is $viewer_id, object is $object_id and type $type"
 			
@@ -78,7 +78,7 @@ view_api_test_with_type \
 			
 			set count_record [db_string count_record "select count(*) from  views_by_type where object_id = :object_id and viewer_id = :viewer_id" -default 0]
 			
-			aa_true "Record add" [expr {$count_record > 0}]
+			aa_true "Record add" {$count_record > 0}
 			
 			set count_views [db_string count_views "select views_count from views_by_type where object_id = :object_id and viewer_id = :viewer_id" -default 0]
 			
@@ -86,16 +86,16 @@ view_api_test_with_type \
 			#Update count views
 			set count_record [db_string count_record "select count(*) from  views_by_type where object_id = :object_id and viewer_id = :viewer_id" -default 0]
 			
-			aa_true "Update record but don't insert new row" [expr {$count_record == 1}]
+			aa_true "Update record but don't insert new row" {$count_record == 1}
 			
 			set count_views2 [db_string count_views2 "select views_count from views_by_type where object_id = :object_id and viewer_id = :viewer_id" -default 0]
 			
-			aa_true "Count_view is updated" [expr {$count_views2 > $count_views}]
+			aa_true "Count_view is updated" {$count_views2 > $count_views}
 			
 			set get [views::get -object_id $object_id]
 			aa_log "Return of function views::get $get"
 			
-			aa_true "User has viewed object_id" [expr {[views::viewed_p -object_id $object_id -user_id $viewer_id -type $type] > 0}]
+			aa_true "User has viewed object_id" {[views::viewed_p -object_id $object_id -user_id $viewer_id -type $type] > 0}
 			set all_views_count [db_string count_views_views "select sum(views_count) from views_by_type where object_id = :object_id and view_type=:type"]
 			set view_count_aggregates [db_string get_views_count "select views_count from view_aggregates_by_type where object_id = :object_id and view_type=:type"]
 			aa_equals "views_count on view_aggregates is equal to sum views_count on views_views" $view_count_aggregates $all_views_count
