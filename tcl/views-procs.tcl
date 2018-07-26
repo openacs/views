@@ -16,8 +16,8 @@ ad_proc -public views::record_view {
 } {
     Record an object view by viewer_id
 
-    @param dimension_key
     @param object_id 
+    @param viewer_id
 
     @return the total view count for the user
 
