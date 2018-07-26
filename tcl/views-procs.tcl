@@ -16,7 +16,7 @@ ad_proc -public views::record_view {
 } {
     Record an object view by viewer_id
 
-    @param object_id 
+    @param object_id
     @param viewer_id
 
     @return the total view count for the user
@@ -25,22 +25,22 @@ ad_proc -public views::record_view {
     @creation-date 2004-01-30
 } {
     if { $type ne "" } {
-	if { $type in {views_count unique_views last_viewed} } {
-	    # if the type is on of the list it will conflict on the views::get procedure
-	    error "views::record_view type cannot be views_count, unique_views or last_viewed"
-	}
-	#TYPE is PL/SQL reserver word in ORACLE
-	#set view_type $type
-	set views_by_type [db_exec_plsql record_view_by_type {}]
+        if { $type in {views_count unique_views last_viewed} } {
+        # if the type is on of the list it will conflict on the views::get procedure
+            error "views::record_view type cannot be views_count, unique_views or last_viewed"
+        }
+        #TYPE is PL/SQL reserver word in ORACLE
+        #set view_type $type
+        set views_by_type [db_exec_plsql record_view_by_type {}]
     }
 
     if {[catch {set views [db_exec_plsql record_view {}]} views]} {
-		set views 0
+        set views 0
     }
     return $views
 }
 
-ad_proc -public views::get { 
+ad_proc -public views::get {
     -object_id
 } {
 
@@ -50,20 +50,20 @@ ad_proc -public views::get {
     <li>unique_views
     <li>last_viewed
     </ul>
-    
+
     @param object_id ID of the object for which you want to return the views
 } {
     if {[db_0or1row views { } -column_array ret] } {
         db_foreach select_views_by_type { } {
-	    set ret($view_type) $views_count
-	}
+            set ret($view_type) $views_count
+        }
         return [array get ret]
     }
     return {views_count {} unique_views {} last_viewed {}}
 }
 
 
-ad_proc -public views::viewed_p { 
+ad_proc -public views::viewed_p {
     -object_id
     {-user_id 0}
     {-type ""}
