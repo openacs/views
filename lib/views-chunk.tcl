@@ -4,7 +4,6 @@
 #
 # @author Deds Castillo (deds@i-manila.com.ph)
 # @creation-date 2004-08-03
-# @arch-tag: c2038e8f-832a-4d9c-913b-6fbd5d429375
 # @cvs-id $Id$
 
 foreach required_param {package_id object_type} {
