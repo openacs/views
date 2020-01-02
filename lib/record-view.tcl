@@ -1,3 +1,9 @@
+ad_include_contract {
+    Record View
+} {
+    displayed_object_id:naturalnum,notnull
+}
+
 views::record_view -object_id $displayed_object_id -viewer_id [ad_conn user_id]
 # Local variables:
 #    mode: tcl
