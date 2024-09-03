@@ -1,25 +1,17 @@
-# packages/views/lib/views-chunk.tcl
-#
-# shows views
-#
-# @author Deds Castillo (deds@i-manila.com.ph)
-# @creation-date 2004-08-03
-# @cvs-id $Id$
+ad_include_contract {
+    packages/views/lib/views-chunk.tcl
 
-foreach required_param {package_id object_type} {
-    if {![info exists $required_param]} {
-        return -code error "$required_param is a required parameter."
-    }
-}
+    shows views
 
-foreach optional_param {filter_url} {
-    if {![info exists $optional_param]} {
-        set $optional_param {}
-    }
-}
-
-if {![info exists sortby]} {
-    set sortby viewer_name
+    @author Deds Castillo (deds@i-manila.com.ph)
+    @creation-date 2004-08-03
+    @cvs-id $Id$
+} {
+    package_id:naturalnum,notnull
+    object_type:token,notnull
+    {filter_url:localurl ""}
+    {sortby:token "viewer_name"}
+    viewer_id:naturalnum,optional
 }
 
 set user_id [ad_conn user_id]
