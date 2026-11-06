@@ -14,16 +14,17 @@
 
 CREATE OR REPLACE FUNCTION views_views_ins_tr () RETURNS trigger AS $$
 BEGIN
-    if not exists (select 1 from view_aggregates where object_id = new.object_id) then 
-        INSERT  INTO view_aggregates (object_id,views_count,unique_views,last_viewed) 
-        VALUES (new.object_id,1,1,now());
-    else
-        UPDATE view_aggregates 
-           SET views_count = views_count + 1, unique_views = unique_views + 1, last_viewed = now() 
-         WHERE object_id = new.object_id;
-    end if;
+    INSERT INTO view_aggregates AS a
+        (object_id, views_count, unique_views, last_viewed)
+    VALUES
+        (NEW.object_id, 1, 1, now())
+    ON CONFLICT (object_id)
+    DO UPDATE SET
+        views_count = a.views_count + 1,
+        unique_views = a.unique_views + 1,
+        last_viewed = now();
 
-    return new;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -51,17 +52,17 @@ execute procedure views_views_upd_tr();
 
 CREATE OR REPLACE FUNCTION views_by_type_ins_tr () RETURNS trigger AS $$
 BEGIN
-    if not exists (select 1 from view_aggregates_by_type where object_id = new.object_id and view_type = new.view_type) then 
-        INSERT INTO view_aggregates_by_type (object_id,view_type,views_count,unique_views,last_viewed) 
-        VALUES (new.object_id,new.view_type,1,1,now());
-    else
-        UPDATE view_aggregates_by_type
-           SET views_count = views_count + 1, unique_views = unique_views + 1, last_viewed = now() 
-         WHERE object_id = new.object_id
-           AND view_type = new.view_type;
-    end if;
+    INSERT INTO view_aggregates_by_type AS a
+        (object_id, view_type, views_count, unique_views, last_viewed)
+    VALUES
+        (NEW.object_id, NEW.view_type, 1, 1, now())
+    ON CONFLICT (object_id, view_type)
+    DO UPDATE SET
+        views_count = a.views_count + 1,
+        unique_views = a.unique_views + 1,
+        last_viewed = now();
 
-    return new;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
